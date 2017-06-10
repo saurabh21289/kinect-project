@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Convert JSON Data to HTML Table Example</title>
+    <style>
+        table, th, td
+        {
+            margin:12px 12px;
+            border:solid 1px #333;
+            padding:3px 5px;
+            font:30px Verdana;
+        }
+        th {
+            font-weight:bold;
+        }
+        h1{
+
+          font-size: 55px;
+          font-family: Helvetica;
+          color: Blue;
+
+        }
+        #list{
+          font-style: normal;
+          font-weight: bold;
+          font-size: 42px;
+
+        }
+        #dropJoints{
+          font-size: 32px;
+          font-weight: bold;
+        }
+        #dropPos{
+          font-size: 32px;
+          font-weight: bold;
+        }
+        #slct1{
+          font-size: 32px;
+          font-weight: bold;
+
+        }
+
+       </style>
+    <script src="dist/Chart.bundle.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+</head>
+<body>
+<h1 align="center"> Report Analysis</h1>
+<canvas id="barChart" width: "100" height="100"></canvas>
+<br>
+<div id="showData" align = "center"></div>
+<br>
+<div id="slct1" align = "center" size="35" ></div> <!--- Change Format-->
+<div id="list" align="center">
+  <form method="post" class="forms-inline">
+    <span class="long-shadow">Joints</span>
+      <select id="dropJoints" name="dropJoints" class="button-shadow-small" onchange="gtLoader(this)">
+          <option value="0"> SpineBase </option>
+          <option value="1">SpineMid</option>
+          <option value="2">Neck  </option>
+          <option value ="3"> Head</option>
+           <option value ="4"> ShoulderLeft</option>
+          <option value ="5"> ElbowLeft</option>
+          <option value ="6">WristLeft </option>
+          <option value ="7">  HandLeft </option>
+          <option value ="8"> ShoulderRight</option>
+          <option value ="9"> ElbowRight </option>
+          <option value ="10"> WristRight</option>
+          <option value ="11">  HandRight</option>
+          <option value ="12">  HipLeft </option>
+          <option value ="13">  KneeLeft  </option>
+          <option value ="14">  AnkleLeft    </option>
+          <option value ="15"> FootLeft </option>
+          <option value ="16"> HipRight</option>
+          <option value ="17">  KneeRight </option>
+          <option value ="18">   AnkleRight       </option>
+          <option value ="19">  FootRight  </option>
+          <option value ="20">  SpineShoulder </option>
+          <option value ="21">  HandTipLeft </option>
+          <option value ="22"> ThumbLeft </option>
+          <option value ="23">  HandTipRight</option>
+          <option value ="24"> ThumbRight </option>
+      </select>
+  </form>
+  <form method="post" class="forms-inline">
+    <span class="long-shadow">Direction</span>
+      <select id="dropPos" name="dropPos" class="button-shadow-small" onchange="exLoader(this)">
+          <option value="0">Medial-Lateral</option>
+          <option value="1">Superior-Inferior</option>
+          <option value="2">Anterior-Posterior</option>
+          <option value="3">Flexion - Extension</option>
+          <option value="4">Rotation</option>
+          <option value="5">Side Bending</option>
+      </select>
+      <input id = "hidebutton" type="button" value="Show Curves">
+  </form>
+</div>
+<div id = "div_line" align = "center" style="visibility: hidden">
+  <canvas id="lineChart" width="40" height ="20"></canvas>
+</div>
+</body>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="js/report.js"></script>
+  <script src="js/canvas.js"></script>
+</html>
