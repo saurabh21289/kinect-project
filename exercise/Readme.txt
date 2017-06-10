@@ -1,4 +1,4 @@
-I. Server Initiation (Code 3)
+﻿I. Server Initiation (Code 3)
 
 ✓	bufferBodyFrames = [];
 ✓ bufferTrial = [];
@@ -77,3 +77,4 @@ Server
 ✓	C->S: 'connection'
 ✓	S->C:  'disp' & bufferBodyFrames & typeofTest & currentrecordid
 ✓	C: liveupdateCanvas1()
+--
