@@ -81,7 +81,7 @@ if(kinect.open()) {
 			var barData = barAnalyze(bufferTrial, gtArray, exArray);
 			// console.log('curveRequest received!');
 	    socket.emit('report',chartData, barData, gtArray, exArray);
-	    //save2xlsx(bufferTrial,'output.xlsx');
+	    save2xlsx(bufferTrial,'output.xlsx');
     });
 
 		socket.on('curveRequest',function(gtInd,exInd,jt,datatype){
@@ -267,37 +267,63 @@ function getOrientation(bufferTrial,id,jt){
   }
 
 function save2xlsx(bufferTrial,filename){
-	var ws_name = "SheetJS";
-	var wb = new Workbook(), ws = sheet_from_buffer(bufferTrial[0]);
-	wb.SheetNames.push(ws_name);
-	wb.Sheets[ws_name] = ws;
-	var wbout = XLSX.write(wb, {bookType:'xlsx', bookSST:true, type: 'binary'});
-	XLSX.writeFile(wb, filename);
+	var ws_name=[]; //Populate with Reference, EX1, EX2, EX3..
+	ws_name.push("Reference"); //Currently only support Reference & Exercise
+	ws_name.push("Exercise");
+	var wb = new Workbook(); //Create new wb object
+	for(var sheet_num = 0; sheet_num < bufferTrial.length; sheet_num++){
+			var ws = sheet_from_buffer(bufferTrial[sheet_num], ws_name[sheet_num]); //sheet_num depends on the length of bufferTrial
+			wb.SheetNames.push(ws_name[sheet_num]); //Push worksheet name into the list of sheet names
+			wb.Sheets[ws_name[sheet_num]] = ws; //Push workskeet with data into the list of sheets
+	}
+
+	var wbout = XLSX.write(wb, {bookType:'xlsx', bookSST:false, type: 'binary'}); //Define workbook type
+	XLSX.writeFile(wb, filename); //Write workbook
 }
 function Workbook() {
-    if(!(this instanceof Workbook)) return new Workbook();
+    if(!(this instanceof Workbook)) return new Workbook(); //Create new instance of workbook type
     this.SheetNames = [];
     this.Sheets = {};
 }
-function sheet_from_buffer(bufferBodyFrames, opts) {
+function sheet_from_buffer(bufferBodyFrames, ws_name) {
     var ws = {};
-    var range = {s: {c:10000000, r:10000000}, e: {c:0, r:0 }};
-		range.s.r = 0;
-		range.s.c = 0;
-		range.e.r = 0;
-		range.e.c = 175;
-		R = 0;
-    for(var C = 0; C<176; ++C) {
-        var cell = {v: "title" };
+    var range = {s: {c:0, r:0}, e: {c:275, r:500 }};
+		skeleton = 0; //Track which skeleton # it is out of the maximum 6
+		for(var i = 0; i < bufferBodyFrames[0].bodies.length; i++){
+			if(bufferBodyFrames[0].bodies[i].tracked){
+				skeleton = i;
+				break;
+			}
+		}
 
-        if(cell.v == null) continue;
-        var cell_ref = XLSX.utils.encode_cell({c:C,r:R});
-        if(typeof cell.v === 'number') cell.t = 'n';
-        else if(typeof cell.v === 'boolean') cell.t = 'b';
-        else cell.t = 's';
-        ws[cell_ref] = cell;
-    }
-    if(range.s.c < 10000000) ws['!ref'] = XLSX.utils.encode_range(range);
+		//Each joint has the following recorded values per frame:
+		// { depthX: 0.504541277885437,
+    // depthY: 0.4274001717567444,
+    // colorX: 0.5274396538734436,
+    // colorY: 0.43057167530059814,
+    // cameraX: 0.014736349694430828,
+    // cameraY: 0.07034260779619217,
+    // cameraZ: 1.0115480422973633,
+    // orientationX: -0.1835455298423767,
+    // orientationY: 0.9150301814079285,
+    // orientationZ: -0.34553292393684387,
+    // orientationW: -0.09817195683717728 }
+			for(var R = 0; R < bufferBodyFrames.length; R++){
+				var column = 0; // Goes upto 275, i.e. 25 x 11
+				for(var C = 0; C < bufferBodyFrames[R].bodies[skeleton].joints.length; C++) {
+						for(var attributename in bufferBodyFrames[R].bodies[skeleton].joints[C]){
+							var cell = {v: bufferBodyFrames[R].bodies[skeleton].joints[C][attributename]};
+							if(cell.v == null) continue;
+			        var cell_ref = XLSX.utils.encode_cell({c:column,r:R});
+			        if(typeof cell.v === 'number') cell.t = 'n';
+			        else if(typeof cell.v === 'boolean') cell.t = 'b';
+			        else cell.t = 's';
+			        ws[cell_ref] = cell;
+							column++;
+						}
+		    }
+			}
+		ws['!ref'] = XLSX.utils.encode_range(range);
     return ws;
 }
 
