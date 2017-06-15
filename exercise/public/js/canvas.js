@@ -57,12 +57,32 @@ function barTemplateA(barData,gtArray,exArray){
           responsive: true,
           legend: {
               position: 'right',
+              labels: {
+                fontSize: 24
+              }
           },
+
           title: {
               display: true,
-              text: 'Chart.js Horizontal Bar Chart'
-          }
-      },
+              text: 'Horizontal Bar Chart',
+              fontSize: 28
+
+          },
+          scales: {
+            yAxes: [{
+                ticks: {
+                    // Include a dollar sign in the ticks
+                    fontSize: 24
+                    }
+
+            }],
+            xAxes: [{
+              ticks: {
+                fontSize: 24
+              }
+            }]
+        }
+      }
 
   }
 
@@ -87,34 +107,46 @@ function lineTemplateA(curveData){
           datasets: []
       },
       options: {
+          tooltips: {
+            enabled: false
+          },
           responsive: true,
           title:{
               display:true,
-              text:'Chart.js Line Chart'
-          },
-          tooltips: {
-              mode: 'index',
-              intersect: false,
-          },
-          hover: {
-              mode: 'nearest',
-              intersect: true
+              text:'Line Chart',
+              fontSize: 28
           },
           scales: {
               xAxes: [{
                   display: true,
                   scaleLabel: {
                       display: true,
-                      labelString: 'Time (secs)'
-                  }
+                      labelString: 'Time (secs)',
+                      fontSize: 24
+                  },
+              ticks:{
+                fontSize: 24
+              }
+
               }],
               yAxes: [{
                   display: true,
                   scaleLabel: {
                       display: true,
-                      labelString: 'Measurements (m or degrees)'
+                      labelString: 'Measurements (m or degrees)',
+                      fontSize: 24
+                  },
+                  ticks:{
+                    fontSize: 24
                   }
+
               }]
+          },
+          legend: {
+              position: 'right',
+              labels: {
+                fontSize: 24
+              }
           }
       }
   };

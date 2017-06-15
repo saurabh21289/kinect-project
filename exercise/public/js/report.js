@@ -1,4 +1,5 @@
 var socket = io.connect('/');
+
 $(document).ready(function(){
 
     socket.emit('analyze');
@@ -18,7 +19,7 @@ $(document).ready(function(){
     }) //end of 'report' signal
 
     $("#hidebutton").click(function () {
-      $("#hidebutton")[0].value="update curves";
+      $("#hidebutton")[0].value="Update Curves";
       var MAXLIM = 100,gtInd = [], exInd = [];
       for(var i = 0; i<MAXLIM; i++){
         var gtLabel = "ch" + i.toString() + "gt";
@@ -40,7 +41,9 @@ $(document).ready(function(){
     socket.on('curveResult',function(curveData){
       var ctx = document.getElementById("lineChart").getContext("2d");
       var config = lineTemplateA(curveData);
-      var myLine = new Chart(ctx, config);
+      var  myLine = new Chart(ctx, config);
+
+
       $("#div_line")[0].style="visibility: none";
     });
 });

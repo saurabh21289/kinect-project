@@ -39,6 +39,36 @@
           font-weight: bold;
 
         }
+        input[type="checkbox"]{
+          width: 50px; /*Desired width*/
+          height: 50px; /*Desired height*/
+        }
+
+        /*input[type="input"]{
+          height:100px;
+          width:300px;
+          font-size: 72px;
+        }*/
+        .button{
+          border: none;
+          padding: 15px 32px;
+          text-align: center;
+          text-decoration: none;
+          display: inline-block;
+          margin: 4px 2px;
+          cursor: pointer;
+          display: flex;
+          justify-content: center;
+          height:100px;
+          width:300px;
+          font-size: 24px;
+        }
+        .inline{
+          display: flex;
+          justify-content: center;
+          margin: 15px 32px 10px 10px;
+        }
+
 
        </style>
     <script src="dist/Chart.bundle.js"></script>
@@ -51,10 +81,10 @@
 <div id="showData" align = "center"></div>
 <br>
 <div id="slct1" align = "center" size="35" ></div> <!--- Change Format-->
-<div id="list" align="center">
+<div id="list" align="center" class="inline">
   <form method="post" class="forms-inline">
     <span class="long-shadow">Joints</span>
-      <select id="dropJoints" name="dropJoints" class="button-shadow-small" onchange="gtLoader(this)">
+      <select id="dropJoints" name="dropJoints" onchange="gtLoader(this)">
           <option value="0"> SpineBase </option>
           <option value="1">SpineMid</option>
           <option value="2">Neck  </option>
@@ -82,8 +112,10 @@
           <option value ="24"> ThumbRight </option>
       </select>
   </form>
+</div>
+<div id="list" align="center" class="inline">
   <form method="post" class="forms-inline">
-    <span class="long-shadow">Direction</span>
+    <span> Direction</span>
       <select id="dropPos" name="dropPos" class="button-shadow-small" onchange="exLoader(this)">
           <option value="0">Medial-Lateral</option>
           <option value="1">Superior-Inferior</option>
@@ -92,9 +124,13 @@
           <option value="4">Rotation</option>
           <option value="5">Side Bending</option>
       </select>
-      <input id = "hidebutton" type="button" value="Show Curves">
   </form>
+
 </div>
+<div class="inline">
+  <input type="button" class= "button" id = "hidebutton" value="Show Curves">
+</div>
+
 <div id = "div_line" align = "center" style="visibility: hidden">
   <canvas id="lineChart" width="40" height ="20"></canvas>
 </div>

@@ -81,7 +81,7 @@ if(kinect.open()) {
 			var barData = barAnalyze(bufferTrial, gtArray, exArray);
 			// console.log('curveRequest received!');
 	    socket.emit('report',chartData, barData, gtArray, exArray);
-	    save2xlsx(bufferTrial,'output.xlsx');
+	    // save2xlsx(bufferTrial,'output.xlsx');
     });
 
 		socket.on('curveRequest',function(gtInd,exInd,jt,datatype){
