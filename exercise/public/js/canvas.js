@@ -1,25 +1,56 @@
+/*var chartColors = [
+  'rgb(54, 162, 235)', //blue
+  'rgb(54, 162, 235)', //blue
+  'rgb(54, 162, 235)', //blue
+  'rgb(54, 162, 235)', //blue
+  'rgb(54, 162, 235)', //blue
+  'rgb(54, 162, 235)', //blue
+  'rgb(255, 99, 132)', //red
+  'rgb(255, 99, 132)', //red
+  'rgb(255, 99, 132)', //red
+  'rgb(255, 99, 132)', //red
+  'rgb(255, 99, 132)', //red
+  'rgb(255, 99, 132)', //red
+  'rgb(255, 99, 132)', //red
+];
+*/
+var chartColors = [
+  'rgb(255, 99, 132)', //red
+  'rgb(54, 162, 235)', //blue:
+  'rgb(255, 159, 64)', //orange:
+  'rgb(255, 205, 86)', //yellow
+  'rgb(75, 192, 192)', //green
+  'rgb(153, 102, 255)', //purple:
+  'rgb(231,233,237)', //grey:
+  'rgb(255, 99, 132)', //red
+  'rgb(54, 162, 235)', //blue:
+  'rgb(255, 159, 64)', //orange:
+  'rgb(255, 205, 86)', //yellow
+  'rgb(75, 192, 192)', //green
+  'rgb(153, 102, 255)', //purple:
+  'rgb(231,233,237)', //grey:
+  'rgb(255, 99, 132)', //red
+  'rgb(54, 162, 235)', //blue:
+  'rgb(255, 159, 64)', //orange:
+  'rgb(255, 205, 86)', //yellow
+  'rgb(75, 192, 192)', //green
+  'rgb(153, 102, 255)', //purple:
+  'rgb(231,233,237)' //grey:
+];
+
 function barTemplateA(barData,gtArray,exArray){
 
     var Labels = [
-      "Left Hand Speed",
+      "Left Hand Speed Ratio",
       "Left Hand Height Change",
-      "Right Hand Speed Change",
+      "Right Hand Speed Ratio",
       "Right Hand Height Change",
-      "Pelvic Speed",
+      "Pelvic Speed Ratio",
       "Pelvic Height Change",
-      "Trunk Leaning",
+      "Trunk Orientation",
       "Hip A-P Movement"
     ];
     var color = Chart.helpers.color;
-    var chartColors = [
-      'rgb(255, 99, 132)', //red
-      'rgb(255, 159, 64)', //orange:
-      'rgb(255, 205, 86)', //yellow
-      'rgb(75, 192, 192)', //green
-      'rgb(54, 162, 235)', //blue:
-      'rgb(153, 102, 255)', //purple:
-      'rgb(231,233,237)' //grey:
-    ];
 
   var horizontalBarChartData = {} ;
   horizontalBarChartData.labels = Labels;
@@ -90,20 +121,11 @@ function barTemplateA(barData,gtArray,exArray){
 }
 
 function lineTemplateA(curveData){
-  var chartColors = [
-    'rgb(255, 99, 132)', //red
-    'rgb(255, 159, 64)', //orange:
-    'rgb(255, 205, 86)', //yellow
-    'rgb(75, 192, 192)', //green
-    'rgb(54, 162, 235)', //blue:
-    'rgb(153, 102, 255)', //purple:
-    'rgb(231,233,237)' //grey:
-  ];
 
   var config_template = {
       type: 'line',
       data: {
-          labels:[],
+          //labels:[],
           datasets: []
       },
       options: {
@@ -122,10 +144,11 @@ function lineTemplateA(curveData){
                   scaleLabel: {
                       display: true,
                       labelString: 'Time (secs)',
-                      fontSize: 24
+                      fontSize: 24,
                   },
               ticks:{
-                fontSize: 24
+                autoSkip: false,
+                fontSize: 24,
               }
 
               }],
@@ -187,9 +210,8 @@ function JSON2table(myBooks){
   var col = [];
   for (var i = 0; i < myBooks.length; i++) {
       for (var key in myBooks[i]) {
-          if (col.indexOf(key) === -1) {
+          if (col.indexOf(key) === -1)
               col.push(key);
-          }
       }
   }
   // CREATE DYNAMIC TABLE.
@@ -245,7 +267,6 @@ function myFunction() {
 // Close the dropdown menu if the user clicks outside of it
 window.onclick = function(event) {
   if (!event.target.matches('.dropbtn')) {
-
     var dropdowns = document.getElementsByClassName("dropdown-content");
     var i;
     for (i = 0; i < dropdowns.length; i++) {
@@ -255,4 +276,4 @@ window.onclick = function(event) {
       }
     }
   }
-}
+} // end of window.onclick

@@ -6,20 +6,18 @@ $(document).ready(function(){
     socket.on('report', function(chartData, barData, gtArray, exArray){
 
       console.log('report signal received!');
-
       var ctx = document.getElementById("barChart").getContext("2d");//save
       var config = barTemplateA(barData,gtArray,exArray);
       var myHorizontalBar = new Chart(ctx, config);
 
       var s = document.getElementById("slct1");
       addCheckbox(gtArray,exArray,s)
-
       JSON2table(chartData);
 
     }) //end of 'report' signal
 
-    $("#hidebutton").click(function () {
-      $("#hidebutton")[0].value="Update Curves";
+    $("#lineChartshow").click(function () {
+      $("#lineChartshow")[0].value="Update Curves";
       var MAXLIM = 100,gtInd = [], exInd = [];
       for(var i = 0; i<MAXLIM; i++){
         var gtLabel = "ch" + i.toString() + "gt";
@@ -36,14 +34,18 @@ $(document).ready(function(){
       var jt = document.getElementById("dropJoints").value;
       var datatype = document.getElementById("dropPos").value;
       socket.emit('curveRequest',gtInd,exInd,jt,datatype);
-
     });
+
+    $("#savedata").click(function () {
+      $("#savedata")[0].value="Data Saved!";
+      socket.emit('saveRequest','output.xlsx');
+    });
+
     socket.on('curveResult',function(curveData){
       var ctx = document.getElementById("lineChart").getContext("2d");
+      ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
       var config = lineTemplateA(curveData);
       var  myLine = new Chart(ctx, config);
-
-
       $("#div_line")[0].style="visibility: none";
     });
 });

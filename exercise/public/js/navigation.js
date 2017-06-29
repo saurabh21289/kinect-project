@@ -1,41 +1,22 @@
 $(document).ready(function () {
   //state button
   $("#command").click(function () {
-    switch ($("#command")[0].value){
-      case "Start":
-        $("#command")[0].value = "Stop";
-        $("#command")[0].style.backgroundColor = 'red';
-        //$("#text").text("Stopped Recording");
-      break;
-
-      case "Stop":
-        $("#command")[0].value = "Live";
-        $("#command")[0].style.backgroundColor = '';
-      break;
-
-      case "Live":
-        $("#command")[0].value = "Start";
-        $("#command")[0].style.backgroundColor = '';
-      break
-
-      default:
+    if (clientActive){
+      socket.emit('command');
+      clientActive = false; // lock the client until server responds
     }
-    socket.emit('command');
   });
 
   $("#gt").click(function () {
-    socket.emit('choose', 1);
-    document.getElementById("display").style.display = 'none';
+    socket.emit('dataLabelFromClient', 1);
   });
 
   $("#ex").click(function () {
-    socket.emit('choose', 2);
-    document.getElementById("display").style.display = 'none';
+    socket.emit('dataLabelFromClient', 2);
   });
 
   $("#re").click(function () {
-    socket.emit('choose', 3);
-    document.getElementById("display").style.display = 'none';
+    socket.emit('dataLabelFromClient', 3);
   });
 
   $("#report").click(function () {

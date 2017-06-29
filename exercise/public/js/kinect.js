@@ -1,4 +1,6 @@
 var socket = io.connect('/');
+var clientActive = false;
+
 $(document).ready(function () {
   var canvasSKLT = document.getElementById('bodyCanvas');
   var ctx1 = canvasSKLT.getContext('2d');
@@ -13,7 +15,77 @@ $(document).ready(function () {
 
   var IntervalID;
 
+  // Signals
+
+  // Use bodyFrame from server to update the canvas 1 on client
+  socket.on('init', function(bodyFrame,systemState){
+    clientActive = true;
+    liveupdateCanvas1(bodyFrame,-1);
+    document.getElementById("command").value= 'Start';
+    document.getElementById("command").style.backgroundColor = '';
+    document.getElementById("display").style.display = 'none';
+  });
+
+  socket.on('rec', function(bodyFrame,systemState, tracingID){
+    clientActive = true;
+    liveupdateCanvas1(bodyFrame,tracingID);
+    document.getElementById("command").value = 'Stop';
+    document.getElementById("command").style.backgroundColor = 'red';
+    document.getElementById("display").style.display = 'none';
+  });
+
+  socket.on('disp', function(bufferBodyFrames,systemState, tracingID, activityLabeled){
+    clientActive = true; // unlock the button
+    IntervalID = animateCanvas1(bufferBodyFrames,tracingID);
+    document.getElementById("command").value = 'Live';
+    document.getElementById("command").style.backgroundColor = '';
+    if (!activityLabeled)
+      document.getElementById("display").style.display = 'block';
+  });
+
+  socket.on('live', function(bodyFrame,systemState, tracingID){
+    clientActive = true;
+    clearInterval(IntervalID);
+    liveupdateCanvas1(bodyFrame,-1);
+
+    document.getElementById("command").value= 'Start';
+    document.getElementById("command").style.backgroundColor = '';
+    document.getElementById("display").style.display = 'none';
+  });
+
+  socket.on('serverDataLabeled',function(){ // hid the buttons "Reference","Exercise","Discard"
+    document.getElementById("display").style.display = 'none';
+  });
+
   // Functions
+
+  function drawCircle(x, y, r, color){ // Not used in current code
+    ctx1.beginPath();
+    ctx1.strokeStyle=color;
+    ctx1.arc(x, y,r,0,Math.PI*2);
+    ctx1.stroke();
+  }
+
+  function drawBody(body){
+    //drawCircle(50, 50, 10, "green");
+    jointType = [7,6,5,4,2,8,9,10,11,10,9,8,2,3,2,1,0,12,13,14,15,14,13,12,0,16,17,18,19] //re visit and draw in a line
+    jointType.forEach(function(jointType){
+      drawJoints(body.joints[jointType].depthX * width, body.joints[jointType].depthY * height);
+    });
+    drawCenterCircle(width/2, height/5, 50, body.joints[2].depthX * width, body.joints[2].depthY * height);
+
+    ctx1.beginPath();
+    ctx1.moveTo(body.joints[7].depthX * width, body.joints[7].depthY * height);
+    jointType.forEach(function(jointType){
+      ctx1.lineTo(body.joints[jointType].depthX * width, body.joints[jointType].depthY * height);
+      ctx1.moveTo(body.joints[jointType].depthX * width, body.joints[jointType].depthY * height);
+    });
+    ctx1.lineWidth=10;
+    ctx1.strokeStyle='blue';
+    ctx1.stroke();
+    ctx1.closePath();
+  }
+
   function drawJoints(cx,cy){
       ctx1.beginPath();
       ctx1.arc(cx,cy,radius,0,Math.PI*2); //radius is a global variable defined at the beginning
@@ -52,72 +124,12 @@ $(document).ready(function () {
 
   function animateCanvas1(bufferBodyFrames,tracingID){
     var i = 0;
-
     var TimerID = setInterval(function(){
       liveupdateCanvas1(bufferBodyFrames[i], tracingID);
       i++;
       if (i>=bufferBodyFrames.length){i=0;}
     },20);
-
     return TimerID;
-  }
-
-  // Signals
-
-  // Use bodyFrame from server to update the canvas 1 on client
-  socket.on('init', function(bodyFrame,systemState){
-
-    liveupdateCanvas1(bodyFrame,-1);
-    document.getElementById("command").value= 'Start';
-    document.getElementById("display").style.display = 'none';
-  });
-
-  socket.on('rec', function(bodyFrame,systemState, tracingID){
-    liveupdateCanvas1(bodyFrame,tracingID);
-    document.getElementById("command").value = 'Stop';
-    document.getElementById("display").style.display = 'none';
-  });
-
-  socket.on('live', function(bodyFrame,systemState, tracingID){
-    clearInterval(IntervalID);
-    liveupdateCanvas1(bodyFrame,-1);
-
-    document.getElementById("command").value= 'Start';
-    document.getElementById("display").style.display = 'none';
-  });
-
-  socket.on('disp', function(bufferBodyFrames,systemState, tracingID){
-    IntervalID = animateCanvas1(bufferBodyFrames,tracingID);
-    document.getElementById("command").value = 'Live';
-    document.getElementById("display").style.display = 'block';
-  });
-
-
-  function drawCircle(x, y, r, color){ // Not used in current code
-    ctx1.beginPath();
-    ctx1.strokeStyle=color;
-    ctx1.arc(x, y,r,0,Math.PI*2);
-    ctx1.stroke();
-  }
-
-  function drawBody(body){
-    //drawCircle(50, 50, 10, "green");
-    jointType = [7,5,4,2,8,9,11,9,8,2,3,2,1,0,12,13,14,13,12,0,16,17,18] //re visit and draw in a line
-    jointType.forEach(function(jointType){
-      drawJoints(body.joints[jointType].depthX * width, body.joints[jointType].depthY * height);
-    });
-    drawCenterCircle(width/2, height/5, 50, body.joints[2].depthX * width, body.joints[2].depthY * height);
-
-    ctx1.beginPath();
-    ctx1.moveTo(body.joints[7].depthX * width, body.joints[7].depthY * height);
-    jointType.forEach(function(jointType){
-      ctx1.lineTo(body.joints[jointType].depthX * width, body.joints[jointType].depthY * height);
-      ctx1.moveTo(body.joints[jointType].depthX * width, body.joints[jointType].depthY * height);
-    });
-    ctx1.lineWidth=10;
-    ctx1.strokeStyle='blue';
-    ctx1.stroke();
-    ctx1.closePath();
   }
 });
 

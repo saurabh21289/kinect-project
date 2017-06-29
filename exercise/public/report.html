@@ -1,20 +1,19 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Convert JSON Data to HTML Table Example</title>
+    <title>ExerciseCheck Report</title>
     <style>
         table, th, td
         {
             margin:12px 12px;
             border:solid 1px #333;
             padding:3px 5px;
-            font:30px Verdana;
+            font:24px Verdana;
         }
         th {
             font-weight:bold;
         }
         h1{
-
           font-size: 55px;
           font-family: Helvetica;
           color: Blue;
@@ -84,12 +83,12 @@
 <div id="list" align="center" class="inline">
   <form method="post" class="forms-inline">
     <span class="long-shadow">Joints</span>
-      <select id="dropJoints" name="dropJoints" onchange="gtLoader(this)">
+      <select id="dropJoints" name="dropJoints">
           <option value="0"> SpineBase </option>
           <option value="1">SpineMid</option>
           <option value="2">Neck  </option>
           <option value ="3"> Head</option>
-           <option value ="4"> ShoulderLeft</option>
+          <option value ="4"> ShoulderLeft</option>
           <option value ="5"> ElbowLeft</option>
           <option value ="6">WristLeft </option>
           <option value ="7">  HandLeft </option>
@@ -116,7 +115,7 @@
 <div id="list" align="center" class="inline">
   <form method="post" class="forms-inline">
     <span> Direction</span>
-      <select id="dropPos" name="dropPos" class="button-shadow-small" onchange="exLoader(this)">
+      <select id="dropPos" name="dropPos" class="button-shadow-small">
           <option value="0">Medial-Lateral</option>
           <option value="1">Superior-Inferior</option>
           <option value="2">Anterior-Posterior</option>
@@ -128,7 +127,8 @@
 
 </div>
 <div class="inline">
-  <input type="button" class= "button" id = "hidebutton" value="Show Curves">
+  <input type="button" class= "button" id = "lineChartshow" value="Show Curves">
+  <input type="button" class= "button" id = "savedata" value="Generate Report">
 </div>
 
 <div id = "div_line" align = "center" style="visibility: hidden">
