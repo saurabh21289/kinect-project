@@ -73,7 +73,7 @@ function distance(x1, y1, x2, y2){
 }
 
 
-var Kinect2 = require('../lib//kinect2'), //Ensure that the directory structure is such that lib folder is accessible
+var Kinect2 = require('kinect2'), //Ensure that the directory structure is such that lib folder is accessible
 	express = require('express'),
 	app = express(),
 	server = https.createServer(options, app),
