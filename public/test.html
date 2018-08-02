@@ -1,0 +1,18 @@
+<script src="https://cdn.webrtc-experiment.com/RecordRTC/Whammy.js"></script>
+<script src="https://cdn.webrtc-experiment.com/RecordRTC/CanvasRecorder.js"></script>
+<canvas></canvas>
+<script>
+var canvas = document.querySelector('canvas');
+var recorder = new CanvasRecorder(window.canvasElementToBeRecorded, {
+    disableLogs: false
+});
+
+// start recording <canvas> drawings
+recorder.record();
+
+// a few minutes later
+recorder.stop(function(blob) {
+    var url = URL.createObjectURL(blob);
+    window.open(url);
+});
+</script> 

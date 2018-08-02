@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content = "width=device-width, initial-scale=1.0">
+	<title>Node Kinect2 Client</title>
+	<link href='https://fonts.googleapis.com/css?family=Bree+Serif|Merriweather:400,300,300italic,400italic,700,700italic' rel='stylesheet' type='text/css'>
+	<link async href="https://fonts.googleapis.com/css?family=Fredoka%20One" data-generated="http://enjoycss.com" rel="stylesheet" type="text/css"/>
+	<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+	<link rel="stylesheet" type="text/css" href="css/style.css" />
+
+	<script src="js/canvasjs.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+	<script src="https://kevingleason.me/SimpleRTC/js/webrtc.js"></script>
+	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+	<script src="https://cdn.pubnub.com/pubnub.min.js"></script>
+
+
+</head>
+<body align="center">
+<h1 align="center">ExerciseCheck</h1>
+	<div id="vid-box" class="ui-widget-content">
+	</div>
+	<div id="frm">
+		<form class="form-inline" name="loginForm" id="login" action="#" onsubmit="return login(this);">
+		    <input type="text" name="username" id="username" placeholder="Pick a username!"/>
+		    <input type="submit" name="login_submit" value="Log In" class="btn btn-success">
+		</form>
+
+		<form class="form-inline" name="callForm" id="call" action="#" onsubmit="return makeCall(this);">
+		    <input type="text" name="number" placeholder="Enter user to dial!"/>
+		    <input type="submit" value="Call" class="btn btn-success"/>
+		</form>
+	</div>
+
+	<hr>
+	<div id="display">
+		<input id="hidebutton" style="display: none;" class="button-shadow" type="button" value="Hide/Show Graph"/>
+		<input id="compare" class="button-shadow" type="button" value="Compare"/>
+		<input id="exercise" class="button-shadow" type="button" value="Perform Exercise"/>
+		<!-- <input id="exercise" class="button-shadow" type="button" value="Exercise"/> -->
+		<input id="stop" class="button-shadow" type="button" value="Stop"/>
+		<input id="save" class="button-shadow" type="button" value="Save"/>
+	</div>
+
+	<br>
+	<form method="post" class="forms-inline">
+	    <select id="dropdownhs" name="dropdownex" class="button-shadow-small" onchange="exSelector(this)">
+					<option>Select Exercise</option>
+					<option value="hand">Hand</option>
+					<option value="squat">Squat</option>
+	    </select>
+	    <!-- <button type="button" class="button-shadow-small" onclick="exerciseSelector(dropdownex)">Load Exercise</button> -->
+	</form>
+	<form method="post" class="forms-inline">
+		<span class="long-shadow">Select GT#:</span>
+	    <select id="dropdowngt" name="dropdowngt" class="button-shadow-small" onchange="gtLoader(this)">
+					<option value="clear">Clear</option>
+					<option value="1">One</option>
+	        <option value="2">Two</option>
+	    </select>
+	    <!-- <button type="button" class="button-shadow-small" onclick="gtLoader(dropdowngt)">Load Ground Truth</button> -->
+	</form>
+	<form method="post" class="forms-inline">
+		<span class="long-shadow">Select EX#:</span>
+	    <select id="dropdownex" name="dropdownex" class="button-shadow-small" onchange="exLoader(this)">
+					<option value="clear">Clear</option>
+					<option value="5">One</option>
+	        <option value="6">Two</option>
+					<option value="7">Three</option>
+	        <option value="8">Four</option>
+	    </select>
+	    <!-- <button type="button" class="button-shadow-small" onclick="exLoader(dropdownex)">Load Exercise</button> -->
+	</form>
+
+	<br>
+	<span id="info" class="long-shadow"></span>
+	<span id="text" class="long-shadow"></span>
+
+	<div id="graph" class="row1" style="display: none; height: 600px;">
+		<div class = "column1" id="visualization1" style="height: 600px; width: 600px;"><canvas id="chart1" class="canvas-color"></canvas></div>
+		<div id="visualization2" style="height: 600px; width: 600px;"><canvas id="chart2" class="canvas-color"></canvas></div>
+		<div id="visualization3" style="height: 600px; width: 600px;"><canvas id="chart3" class="canvas-color"></canvas></div>
+	</div>
+
+
+	<br>
+	<canvas id="bodyCanvas" height="700"	width="700"></canvas>
+<!--600, 700  -->
+	<canvas id="drawCanvas_gt" height="700"	width="700"></canvas>
+	<canvas id="drawCanvas_ex" height="700"	width="700"></canvas>
+
+	<script src="//cdnjs.cloudflare.com/ajax/libs/annyang/2.5.0/annyang.min.js"></script>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/three.js/84/three.min.js"></script>
+	<script src="https://threejs.org/examples/js/controls/OrbitControls.js"></script>
+
+
+	<script src="/socket.io/socket.io.js"></script>
+
+	<script src="js/navigation.js"></script>
+	<script src="js/voice.js"></script>
+	<script src="js/kinect.js"></script>
+	<script src="js/chart.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.js"></script>
+	<script src="js/orientation.js"></script>
+
+
+
+	<script>
+	var video_out = document.getElementById("vid-box");
+
+	function login(form) {
+	    var phone = window.phone = PHONE({
+	        number        : form.username.value || "Anonymous", // listen on username line else Anonymous
+	        publish_key   : 'pub-c-cd012920-5cef-4e13-aa6f-07cf674e9750',
+	        subscribe_key : 'sub-c-f6d1884c-c4c9-11e6-90ff-0619f8945a4f',
+	    });
+	    phone.ready(function(){ form.username.style.background="#55ff5b"; });
+	    phone.receive(function(session){
+	        session.connected(function(session) { video_out.appendChild(session.video); });
+	        session.ended(function(session) { video_out.innerHTML=''; });
+	    });
+	    return false;   // So the form does not submit.
+	}
+
+	function makeCall(form){
+	    if (!window.phone) alert("Login First!");
+	    else phone.dial(form.number.value);
+	    return false;
+	}
+	</script>
+
+	<footer>
+	Version: 0.4, last updated April 10, 2017
+	</footer>
+
+</body>
+</html>
